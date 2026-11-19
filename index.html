@@ -228,7 +228,7 @@ select:focus-visible {
     margin: 4px 0;
 }
 
-/* Category colors */
+/* CATEGORY COLORS */
 
 .c0 {
     background: #dbeafe;
@@ -297,7 +297,7 @@ footer {
     display: none !important;
 }
 
-/* Mobile responsiveness */
+/* MOBILE RESPONSIVENESS */
 
 @media(max-width: 780px) {
 
@@ -364,12 +364,14 @@ footer {
 }
 
 @media(max-width: 370px) {
+
     .slot, .controls {
         grid-template-columns: 1fr;
     }
+
 }
 
-/* Print settings */
+/* PRINT SETTINGS */
 
 @media print {
 
@@ -458,6 +460,7 @@ footer {
         size: landscape;
         margin: 10mm;
     }
+
 }
 </style>
 </head>
@@ -499,7 +502,7 @@ footer {
         </div>
 
         <div class="stat">
-            <strong>30</strong>
+            <strong>27</strong>
             <span>Planned regular matches</span>
         </div>
 
@@ -524,15 +527,20 @@ footer {
     </div>
 
     <div class="notice">
+
         <strong>
             Roster update · November 19, 2026 · Revision 287:
         </strong>
-        Intermediate roster and all six fixtures verified in
-        the admin panel. Other category pair counts are confirmed;
-        their names and fixture numbering remain provisional
-        pending verification. Names with * were previously flagged
-        for confirmation. Times are estimates; check official
-        live results for changes.
+
+        Intermediate and MXD rosters and fixtures
+        verified in the admin panel.
+        MD Advanced, MD Intermediate and Novice
+        retain their previous rosters and fixtures
+        as instructed.
+        Names with * were previously flagged for confirmation.
+        Times are estimates; check official live results
+        for changes.
+
     </div>
 
 </header>
@@ -609,7 +617,9 @@ footer {
             </label>
 
             <select id="category">
-                <option value="all">All categories</option>
+                <option value="all">
+                    All categories
+                </option>
             </select>
 
         </div>
@@ -621,11 +631,16 @@ footer {
             </label>
 
             <select id="court">
-                <option value="all">All courts</option>
+
+                <option value="all">
+                    All courts
+                </option>
+
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
                 <option>4</option>
+
             </select>
 
         </div>
@@ -636,10 +651,11 @@ footer {
 
     </div>
 
-    <p id="resultCount"
-       class="muted"
-       role="status"
-       aria-live="polite">
+    <p
+        id="resultCount"
+        class="muted"
+        role="status"
+        aria-live="polite">
     </p>
 
     <div id="legend" class="legend"></div>
@@ -653,11 +669,17 @@ footer {
     <h2>Court assignments</h2>
 
     <p class="muted">
+
         Be ready 10 minutes before your match.
-        Available courts and two buffer slots may be used
-        for delays or additional matches.
+        Available courts may be used for delays
+        or additional matches.
+
+        Every pair has at least one 25-minute
+        slot between scheduled games.
+
         The 25-minute match slots are estimates;
         best-of-three matches can run longer.
+
     </p>
 
     <div id="schedule" class="schedule"></div>
@@ -675,18 +697,25 @@ footer {
     <h2>Player reminders</h2>
 
     <p>
+
         All players must arrive at 6:30 PM.
+
         Match times are estimates, not fixed game limits.
+
         Each category has three podium places.
+
         Any additional head-to-head matches are determined
         by the official live results system.
+
     </p>
 
 </section>
 
 <footer>
+
     BBC Mini Fun Game · Read-only schedule ·
     No database connection or write operations
+
 </footer>
 
 </main>
@@ -695,11 +724,19 @@ footer {
 
 /* =====================================
    UPDATED PLAYER ROSTER
+
    November 19, 2026
    Tournament Revision 287
+
+   Total:
+   34 Players
+   17 Pairs
+   27 Planned Regular Matches
 ===================================== */
 
 const cats = [
+
+    /* 0 - MD ADVANCED - RETAINED */
 
     {
         n: 'MD Advanced',
@@ -709,6 +746,8 @@ const cats = [
             'Tristan / Dem*'
         ]
     },
+
+    /* 1 - MD INTERMEDIATE - RETAINED */
 
     {
         n: 'MD Intermediate',
@@ -720,14 +759,18 @@ const cats = [
         ]
     },
 
+    /* 2 - MXD - CORRECTED */
+
     {
         n: 'MXD',
         p: [
-            'Mark / Yvette*',
-            'Angelo / Clarisse*',
-            'Cholo / Chrizle*'
+            'Mark / Yvette',
+            'Angelo / Clarisse',
+            'Vlad / Lani'
         ]
     },
+
+    /* 3 - INTERMEDIATE - CORRECTED */
 
     {
         n: 'Intermediate',
@@ -738,6 +781,8 @@ const cats = [
             'Dave / Axel'
         ]
     },
+
+    /* 4 - NOVICE - RETAINED */
 
     {
         n: 'Novice',
@@ -751,19 +796,32 @@ const cats = [
 ];
 
 /* =====================================
-   MATCH SCHEDULE
+   OPTIMIZED MATCH SCHEDULE
 
    Format:
-   [Category index, Match number,
-    First pair index, Second pair index]
+   [
+       Category Index,
+       Match Number,
+       First Pair Index,
+       Second Pair Index
+   ]
 
    Each row represents four courts.
-   Null means the court is available.
+   Null means court is available.
+
+   Category Index:
+   0 = MD Advanced
+   1 = MD Intermediate
+   2 = MXD
+   3 = Intermediate
+   4 = Novice
+
+   Each time slot = 25 minutes.
 ===================================== */
 
 const slots = [
 
-    // 7:00 PM - 7:25 PM
+    /* 7:00 PM - 7:25 PM */
 
     [
         [0,1,0,1],
@@ -772,7 +830,7 @@ const slots = [
         null
     ],
 
-    // 7:25 PM - 7:50 PM
+    /* 7:25 PM - 7:50 PM */
 
     [
         [1,1,0,1],
@@ -781,35 +839,34 @@ const slots = [
         [3,2,2,3]
     ],
 
-    // 7:50 PM - 8:15 PM
+    /* 7:50 PM - 8:15 PM */
 
     [
         [0,2,1,2],
-        [2,2,1,2],
+        null,
         [4,2,1,2],
         null
     ],
 
-    // 8:15 PM - 8:40 PM
-    // BUFFER SLOT
+    /* 8:15 PM - 8:40 PM */
 
     [
         null,
-        null,
+        [2,2,1,2],
         null,
         null
     ],
 
-    // 8:40 PM - 9:05 PM
+    /* 8:40 PM - 9:05 PM */
 
     [
         [0,3,0,2],
-        [2,3,0,2],
+        null,
         [4,3,0,2],
         null
     ],
 
-    // 9:05 PM - 9:30 PM
+    /* 9:05 PM - 9:30 PM */
 
     [
         [1,3,0,3],
@@ -818,35 +875,34 @@ const slots = [
         [3,4,1,2]
     ],
 
-    // 9:30 PM - 9:55 PM
+    /* 9:30 PM - 9:55 PM */
 
     [
         [0,4,0,1],
-        [2,4,0,1],
+        null,
         [4,4,0,1],
         null
     ],
 
-    // 9:55 PM - 10:20 PM
-    // BUFFER SLOT
+    /* 9:55 PM - 10:20 PM */
 
     [
         null,
-        null,
+        [2,3,0,2],
         null,
         null
     ],
 
-    // 10:20 PM - 10:45 PM
+    /* 10:20 PM - 10:45 PM */
 
     [
         [0,5,1,2],
-        [2,5,1,2],
+        null,
         [4,5,1,2],
         null
     ],
 
-    // 10:45 PM - 11:10 PM
+    /* 10:45 PM - 11:10 PM */
 
     [
         [1,5,0,2],
@@ -855,11 +911,11 @@ const slots = [
         [3,6,3,1]
     ],
 
-    // 11:10 PM - 11:35 PM
+    /* 11:10 PM - 11:35 PM */
 
     [
         [0,6,0,2],
-        [2,6,0,2],
+        null,
         [4,6,0,2],
         null
     ]
@@ -887,17 +943,23 @@ function el(tag, cls, txt) {
     return e;
 }
 
+/* =====================================
+   TIME CALCULATION
+===================================== */
+
 function time(i) {
 
     let m = 19 * 60 + i * 25;
+
     let h = Math.floor(m / 60) % 24;
 
     return `${h % 12 || 12}:${String(m % 60)
         .padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+
 }
 
 /* =====================================
-   CATEGORY FILTERS AND LEGEND
+   CATEGORY FILTERS AND COLOR LEGEND
 ===================================== */
 
 cats.forEach((c, i) => {
@@ -915,12 +977,15 @@ cats.forEach((c, i) => {
 });
 
 /* =====================================
-   GENERATE PLAYER SCHEDULE
+   RENDER THE PLAYER SCHEDULE
 ===================================== */
 
 function render() {
 
-    let q = $('search').value.trim().toLowerCase();
+    let q = $('search')
+        .value
+        .trim()
+        .toLowerCase();
 
     let category = $('category').value;
 
@@ -953,10 +1018,18 @@ function render() {
 
         let wrap = el('div', 'slot');
 
-        let t = el('div', 'time', time(i));
+        let t = el(
+            'div',
+            'time',
+            time(i)
+        );
 
         t.append(
-            el('small', '', 'to ' + time(i + 1))
+            el(
+                'small',
+                '',
+                'to ' + time(i + 1)
+            )
         );
 
         wrap.append(t);
@@ -975,14 +1048,18 @@ function render() {
 
                 let b = c.p[m[3]];
 
-                let hay = (a + ' ' + b).toLowerCase();
+                let hay = (a + ' ' + b)
+                    .toLowerCase();
 
                 ok =
+
                     (!q || hay.includes(q)) &&
+
                     (
                         category === 'all' ||
                         category === String(m[0])
                     ) &&
+
                     (
                         court === 'all' ||
                         court === String(j + 1)
@@ -991,6 +1068,7 @@ function render() {
                 if (ok) {
 
                     hits++;
+
                     count++;
 
                     let f = el(
@@ -1012,11 +1090,23 @@ function render() {
                             c.n + ' · Match ' + m[1]
                         ),
 
-                        el('strong', '', a),
+                        el(
+                            'strong',
+                            '',
+                            a
+                        ),
 
-                        el('span', 'vs', 'VS'),
+                        el(
+                            'span',
+                            'vs',
+                            'VS'
+                        ),
 
-                        el('strong', '', b)
+                        el(
+                            'strong',
+                            '',
+                            b
+                        )
 
                     );
 
@@ -1035,9 +1125,12 @@ function render() {
                 );
 
                 x.setAttribute(
+
                     'aria-label',
+
                     'Court ' + (j + 1) +
                     (m ? ' filtered' : ' available')
+
                 );
 
                 wrap.append(x);
@@ -1057,17 +1150,25 @@ function render() {
     });
 
     $('resultCount').textContent =
+
         count +
+
         ' matching regular ' +
+
         (count === 1 ? 'match' : 'matches') +
+
         (filtered ? ' · filters applied' : '');
 
     if (!count) {
 
         let msg = el(
+
             'p',
+
             'muted',
+
             'No games match your filters. Try another player name or clear the filters.'
+
         );
 
         root.append(msg);
@@ -1077,17 +1178,24 @@ function render() {
 }
 
 /* =====================================
-   SEARCH, FILTER AND PRINT CONTROLS
+   SEARCH AND FILTER EVENT LISTENERS
 ===================================== */
 
 ['search', 'category', 'court'].forEach(id => {
 
     $(id).addEventListener(
+
         id === 'search' ? 'input' : 'change',
+
         render
+
     );
 
 });
+
+/* =====================================
+   CLEAR FILTERS
+===================================== */
 
 $('reset').addEventListener('click', () => {
 
@@ -1103,10 +1211,21 @@ $('reset').addEventListener('click', () => {
 
 });
 
+/* =====================================
+   PRINT SCHEDULE
+===================================== */
+
 $('print').addEventListener(
+
     'click',
+
     () => window.print()
+
 );
+
+/* =====================================
+   INITIALIZE SCHEDULE
+===================================== */
 
 render();
 
